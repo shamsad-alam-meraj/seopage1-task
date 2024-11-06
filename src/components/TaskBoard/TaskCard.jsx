@@ -102,8 +102,15 @@ const TaskCard = () => {
         className="modal-content bg-white p-6 rounded-lg max-w-md w-full mx-auto"
         overlayClassName="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       >
-        <h2 className="text-lg font-semibold mb-4">Upload Attachments</h2>
-
+        <div className="mb-4 flex w-full justify-between items-center">
+          <h2 className="text-lg font-semibold ">Upload Attachments</h2>
+          <button
+            onClick={closeModal}
+            className=" bg-blue-500 text-white py-1 px-4  hover:bg-blue-600 rounded-full"
+          >
+            X
+          </button>
+        </div>
         <input
           type="file"
           multiple
@@ -112,7 +119,7 @@ const TaskCard = () => {
         />
 
         {files?.length ? (
-          <h3 className="text-md font-semibold mb-2">Uploaded Files</h3>
+          <h3 className="text-md font-semibold mb-2">Selected Files</h3>
         ) : (
           ""
         )}
@@ -141,13 +148,20 @@ const TaskCard = () => {
             </li>
           ))}
         </ul>
-
-        <button
-          onClick={closeModal}
-          className="mt-4 bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600"
-        >
-          Close
-        </button>
+        {files?.length ? (
+          <div className="flex w-full justify-center items-center mt-4">
+            <button
+              onClick={() => {
+                console.log("button clicked");
+              }}
+              className="bg-blue-500 text-white py-1 px-4  hover:bg-blue-600 rounded-full"
+            >
+              Upload
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
       </Modal>
     </div>
   );
