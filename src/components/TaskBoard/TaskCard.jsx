@@ -48,7 +48,7 @@ const TaskCard = ({ task, fetchTasks }) => {
           formData.append("attachment", file?.file);
 
           await axios.post(
-            `http://localhost:5000/api/files/upload/${taskId}`,
+            `https://seopage1-task-backend.onrender.com/api/files/upload/${taskId}`,
             formData,
             {
               headers: {

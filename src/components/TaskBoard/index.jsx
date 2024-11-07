@@ -32,7 +32,9 @@ const TaskBoard = () => {
   };
   const fetchTasks = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/tasks");
+      const response = await axios.get(
+        "https://seopage1-task-backend.onrender.com/api/tasks"
+      );
       const tasks = response.data.data;
 
       // Group tasks by status
