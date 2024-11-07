@@ -1,14 +1,17 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import TaskCard from "./TaskCard";
 
 const TaskBoard = () => {
-  const statusCounts = {
-    Incomplete: 10,
-    "To Do": 10,
-    Doing: 10,
-    "Under Review": 10,
-    Completed: 10,
-    "Over Due": 10,
-  };
+  const [tasksByStatus, setTasksByStatus] = useState({
+    Incomplete: [],
+    "To Do": [],
+    Doing: [],
+    "Under Review": [],
+    Completed: [],
+    "Over Due": [],
+  });
+
   const getStatusColor = (status) => {
     switch (status) {
       case "Incomplete":
@@ -27,10 +30,39 @@ const TaskBoard = () => {
         return "bg-gray-700";
     }
   };
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/tasks");
+      const tasks = response.data.data;
+
+      // Group tasks by status
+      const groupedTasks = {
+        Incomplete: [],
+        "To Do": [],
+        Doing: [],
+        "Under Review": [],
+        Completed: [],
+        "Over Due": [],
+      };
+
+      tasks.forEach((task) => {
+        if (groupedTasks[task.status]) {
+          groupedTasks[task.status].push(task);
+        }
+      });
+
+      setTasksByStatus(groupedTasks);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
   return (
     <div className="w-full h-screen overflow-x-auto flex space-x-4 px-4 bg-gray-100 pt-2">
-      {Object.entries(statusCounts).map(([status, count]) => (
+      {Object.entries(tasksByStatus).map(([status, tasks]) => (
         <div
           key={status}
           className="relative flex-shrink-0 w-96 bg-white rounded-lg shadow-lg overflow-y-scroll"
@@ -46,13 +78,13 @@ const TaskBoard = () => {
                 <span>{status}</span>
               </div>
               <span className="bg-gray-200 text-black rounded-full px-2">
-                {count}
+                {tasks?.length}
               </span>
             </div>
           </div>
           <div className="px-4">
-            {[...Array(count)].map((_, i) => (
-              <TaskCard key={i} />
+            {tasks.map((task) => (
+              <TaskCard key={task._id} task={task} fetchTasks={fetchTasks} />
             ))}
           </div>
         </div>
